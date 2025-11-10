@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Race2Theme {
-                GameScreen(message = "橫式螢幕，隱藏狀態列.",gameViewModel)
+                GameScreen(message = "資管二B 李羿慧 411312414\n橫式螢幕，隱藏狀態列.",gameViewModel)
             }
         }
     }
