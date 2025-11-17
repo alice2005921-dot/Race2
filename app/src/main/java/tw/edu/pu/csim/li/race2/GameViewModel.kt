@@ -1,4 +1,4 @@
-package tw.edu.pu.csim.li.race2
+package tw.edu.pu.csim.sj.myapplication
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,56 +8,65 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
-
 class GameViewModel: ViewModel() {
-    var gameRunning by mutableStateOf(true)
     var screenWidthPx by mutableStateOf(0f)
         private set
     var screenHeightPx by mutableStateOf(0f)
         private set
+    var gameRunning by mutableStateOf(false)
     var circleX by mutableStateOf(0f)
-
     var circleY by mutableStateOf(0f)
 
-    val horse = Horse()
+    // 設定貯存分數之變數
     var score by mutableStateOf(0)
+        private set // 設為 private set 以便只能在 ViewModel 內修改
+
     // 設定螢幕寬度與高度
     fun SetGameSize(w: Float, h: Float) {
         screenWidthPx = w
         screenHeightPx = h
-
-
+        for (i in 0..2){
+            horses.add(Horse(n=i))
+        }
     }
-    fun StartGame() {
 
-//回到初使位置
+//    val horse = Horse()
+
+    val horses = mutableListOf<Horse>()
+    fun StartGame() {
+        //回到初使位置
         circleX = 100f
         circleY = screenHeightPx - 100f
+
+
 
         viewModelScope.launch {
             while (gameRunning) { // 每0.1秒循環
                 delay(100)
                 circleX += 10
-
-                if (circleX >= screenWidthPx - 100){
+                if (circleX >= screenWidthPx - 100) {
                     circleX = 100f
-                    score++
-                }
-                horse.Run()
-                if(horse.HorseX >= screenWidthPx - 300){
+                    // 範例：每次圓形重置時增加分數
+                    score+=1
 
                 }
-
+                for(i in 0..2){
+                    horses[i].HorseRun()
+                    if (horses[i].horseX >= screenWidthPx - 200) {
+                        for(i in 0..2){
+                            horses[i].horseX = 0}
+                    }
+                }
             }
-
         }
-
     }
     fun MoveCircle(x: Float, y: Float) {
         circleX += x
         circleY += y
     }
 
-
+    // 可以添加一個方法來重設分數
+    fun ResetScore() {
+        score = 0
+    }
 }

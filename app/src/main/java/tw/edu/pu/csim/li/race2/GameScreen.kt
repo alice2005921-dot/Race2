@@ -3,12 +3,18 @@ package tw.edu.pu.csim.li.race2
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -18,15 +24,14 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-
+import androidx.compose.ui.unit.sp // 導入用於設置字體大小的 unit
+import tw.edu.pu.csim.sj.myapplication.GameViewModel
 
 @Composable
+fun GameScreen(message: String, gameViewModel: GameViewModel) {
 
-fun GameScreen(message: String,gameViewModel: GameViewModel) {
-
-   // val imageBitmap = ImageBitmap.imageResource( R.drawable.horse0)
+//載入圖片
+    //val imageBitmap = ImageBitmap.imageResource(R.drawable.horse0)
     val imageBitmaps = listOf(
         ImageBitmap.imageResource(R.drawable.horse0),
         ImageBitmap.imageResource(R.drawable.horse1),
@@ -34,53 +39,75 @@ fun GameScreen(message: String,gameViewModel: GameViewModel) {
         ImageBitmap.imageResource(R.drawable.horse3)
     )
 
+
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.Yellow)
-
     ){
         Canvas (modifier = Modifier.fillMaxSize()
             .pointerInput(Unit) {
-            detectDragGestures { change, dragAmount ->
-                change.consume() // 告訴系統已經處理了這個事件
-                gameViewModel.MoveCircle(dragAmount.x, dragAmount.y)
+                detectDragGestures { change, dragAmount ->
+                    change.consume() // 告訴系統已經處理了這個事件
+                    gameViewModel.MoveCircle( dragAmount.x, dragAmount.y)
+                }
             }
-        }
         ) {
-        // 繪製圓形
+            // 繪製圓形
             drawCircle(
-              color = Color.Red,
-              radius = 100f,
-              center = Offset(gameViewModel.circleX, gameViewModel.circleY)
+                color = Color.Red,
+                radius = 100f,
+                center = Offset(gameViewModel.circleX, gameViewModel.circleY)
             )
-            drawImage(
-                image = imageBitmaps[gameViewModel.horse.HorseNO],
-                dstOffset = IntOffset(
-                    gameViewModel.horse.HorseX,
-                    gameViewModel.horse.HorseY),
-                dstSize = IntSize(200, 200)
-            )
+            for(i in 0..2){
+                drawImage(
+                    image = imageBitmaps[gameViewModel.horses[i].numberNo],
+                    dstOffset = IntOffset(
+                        gameViewModel.horses[i].horseX,
+                        gameViewModel.horses[i].horseY),
+                    dstSize = IntSize(200, 200)
+                )
+            }
+
 
         }
+
+        // 顯示分數
         Text(
-            text = "分數：${gameViewModel.score}",
-            fontSize = 28.sp,
+            text = "分數: ${gameViewModel.score}", // 顯示分數
+            fontSize = 24.sp, // 設定字體大小
             color = Color.Black,
-                    modifier = Modifier
-                    .align(Alignment.TopCenter)
-                .padding(16.dp)
+            modifier = Modifier.align(Alignment.TopCenter) // 置中於頂部
         )
-        Text(text = message + gameViewModel.screenWidthPx.toString() + "*"
-        + gameViewModel.screenHeightPx.toString())
 
-        Button(onClick ={gameViewModel.gameRunning = true
-        gameViewModel.StartGame()
-        }, modifier = Modifier
-            .align(Alignment.BottomCenter)
-            .padding(bottom = 32.dp)
-        ){Text("遊戲開始")}
+        // 其他資訊（原始程式碼中的 Text）
+        Text(text = message + gameViewModel.screenWidthPx.toString() +
+                "*" + gameViewModel.screenHeightPx.toString(),
+            modifier = Modifier.align(Alignment.TopStart) // 置於左上角
+        )
 
+        // 遊戲開始按鈕
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom, // 置於底部
+            horizontalAlignment = Alignment.CenterHorizontally // 水平置中
+        ) {
+            Button(onClick = {
+                gameViewModel.gameRunning = true
+                gameViewModel.ResetScore() // 可選：在開始新遊戲時重設分數
+                gameViewModel.StartGame()
+            }
+            )
+            {
+                Text("遊戲開始")
+            }
+            var user by remember { mutableStateOf (value = "1")}
+            TextField(
+                value = user,
+                onValueChange = { user = it },
+                label = {Text(text="賽馬")},
+                placeholder = {Text(text="猜猜哪匹馬獲勝?")}
+            )
+            Text(text="您預測獲勝的馬是:$user")
+        }
     }
-
 }
-

@@ -1,18 +1,16 @@
-package tw.edu.pu.csim.li.race2
+package tw.edu.pu.csim.sj.myapplication
 
-class Horse() {
 
-    var HorseX = 0
-    var HorseY = 100
+class Horse(n:Int) {
+    var horseX = 0
+    var horseY = 100 + 220 * n
 
-    var HorseNO = 0
+    var numberNo = 0
 
-    fun Run(){
-        HorseNO++
-        if (HorseNO>3) {
-            HorseNO= 0
-        }
-        HorseX += (10..30).random()
+    fun HorseRun(){
+        numberNo ++
+        if (numberNo>3) {numberNo = 0}
+        horseX += (10..30).random()
     }
 }
 

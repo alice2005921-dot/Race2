@@ -6,18 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.window.layout.WindowMetricsCalculator
 import tw.edu.pu.csim.li.race2.ui.theme.Race2Theme
-import kotlin.toString
+import tw.edu.pu.csim.sj.myapplication.GameViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +49,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Race2Theme {
-                GameScreen(message = "資管二B 李羿慧 411312414\n橫式螢幕，隱藏狀態列.",gameViewModel)
+                GameScreen(
+                    message = "資管二B 李羿慧 411312414\n橫式螢幕，隱藏狀態列.",gameViewModel,
+                )
             }
         }
     }
