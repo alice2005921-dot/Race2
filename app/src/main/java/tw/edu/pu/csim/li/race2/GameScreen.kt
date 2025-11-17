@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 
 fun GameScreen(message: String,gameViewModel: GameViewModel) {
 
-    val imageBitmap = ImageBitmap.imageResource(id = R.drawable.horse0)
+    val imageBitmap = ImageBitmap.imageResource( R.drawable.horse0)
 
     Box(modifier = Modifier
         .fillMaxSize()
